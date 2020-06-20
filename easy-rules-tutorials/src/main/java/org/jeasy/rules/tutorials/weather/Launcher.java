@@ -33,7 +33,7 @@ public class Launcher {
     public static void main(String[] args) {
         // define facts
         Facts facts = new Facts();
-        facts.put("rain", true);
+        facts.put("rain", false);
 
         // define rules
         WeatherRule weatherRule = new WeatherRule();

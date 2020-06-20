@@ -25,11 +25,7 @@ package org.jeasy.rules.api;
 
 import org.jeasy.rules.core.RuleProxy;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * This class encapsulates a set of rules and represents a rules namespace.
@@ -135,6 +131,7 @@ public class Rules implements Iterable<Rule> {
     /**
      * Return an iterator on the rules set. It is not intended to remove rules
      * using this iterator.
+     *
      * @return an iterator on the rules set
      */
     @Override

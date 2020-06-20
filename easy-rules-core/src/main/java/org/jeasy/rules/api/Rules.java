@@ -145,4 +145,19 @@ public class Rules implements Iterable<Rule> {
                 .findFirst()
                 .orElse(null);
     }
+
+    @Override
+    public String toString() {
+        Iterator<Rule> iterator = rules.iterator();
+        StringBuilder stringBuilder = new StringBuilder("[");
+        while (iterator.hasNext()) {
+            stringBuilder.append(iterator.next().toString());
+            if (iterator.hasNext()) {
+                stringBuilder.append(",");
+            }
+        }
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+    }
+
 }

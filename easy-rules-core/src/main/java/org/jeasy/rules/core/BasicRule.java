@@ -10,11 +10,11 @@ public class BasicRule implements Rule {
     protected int priority;
 
     public BasicRule() {
-        this(DEFAULT_NAME, DEFAULT_DESCRIPTION, DEFAULT_PRIORITY);
+        this(DEFAULT_NAME);
     }
 
     public BasicRule(String name) {
-        this(name, DEFAULT_DESCRIPTION, DEFAULT_PRIORITY);
+        this(name, DEFAULT_DESCRIPTION);
     }
 
     public BasicRule(String name, String description) {
@@ -44,13 +44,42 @@ public class BasicRule implements Rule {
 
     @Override
     public boolean evaluate(Facts facts) {
-        //TODO
         return false;
     }
 
     @Override
     public void execute(Facts facts) throws Exception {
-        //TODO
+        //no operation
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode() * 31 + getPriority();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Rule) {
+            Rule rule = (Rule) obj;
+            if (getPriority() == rule.getPriority() &&
+                    getName().equals(rule.getName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("Rule{")
+                .append("name='").append(getName()).append("', ")
+                .append("priority=").append(getPriority()).append(", ")
+                .append("description='").append(getDescription()).append("'}")
+                .toString();
     }
 
     @Override
@@ -60,12 +89,6 @@ public class BasicRule implements Rule {
         } else if (this.getPriority() > rule.getPriority()) {
             return 1;
         } else {
-            if (this.getName() == null) {
-                return 1;
-            }
-            if (rule.getName() == null) {
-                return -1;
-            }
             return this.getName().compareTo(rule.getName());
         }
     }

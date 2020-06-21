@@ -86,4 +86,5 @@ public interface Rule extends Comparable<Rule> {
      */
     void execute(Facts facts) throws Exception;
 
+
 }

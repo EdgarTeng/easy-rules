@@ -3,7 +3,7 @@ package org.jeasy.rules.core;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rule;
 
-public class BasicRule implements Rule {
+public abstract class BasicRule implements Rule {
 
     protected String name;
     protected String description;

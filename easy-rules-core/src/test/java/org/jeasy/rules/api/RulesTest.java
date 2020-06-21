@@ -25,6 +25,7 @@ package org.jeasy.rules.api;
 
 import org.jeasy.rules.core.BasicRule;
 import org.jeasy.rules.core.DefaultRulesEngine;
+import org.jeasy.rules.core.RuleBuilder;
 import org.junit.Test;
 
 public class RulesTest {
@@ -33,6 +34,26 @@ public class RulesTest {
     public void testRule() {
         Rules rules = new Rules();
         rules.register(new WeatherRule("weather rule", "if rain, take an umbrella", 1));
+
+        Facts facts = new Facts();
+        Fact<Boolean> rainFact = new Fact<>("rain", true);
+        facts.add(rainFact);
+
+        RulesEngine rulesEngine = new DefaultRulesEngine();
+        rulesEngine.fire(rules, facts);
+    }
+
+    @Test
+    public void testRuleBuilder() {
+        Rules rules = new Rules();
+        rules.register(new RuleBuilder()
+                .name("weather rule")
+                .priority(1)
+                .description("when rain, take an umbrella")
+                .when(Condition.TRUE)
+                .then(facts -> System.out.println("dear, take an umbrella please"))
+                .then(facts -> System.out.println("记得带雨伞"))
+                .build());
 
         Facts facts = new Facts();
         Fact<Boolean> rainFact = new Fact<>("rain", true);

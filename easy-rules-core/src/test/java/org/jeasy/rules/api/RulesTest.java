@@ -23,12 +23,18 @@
  */
 package org.jeasy.rules.api;
 
+import org.jeasy.rules.annotation.Action;
+import org.jeasy.rules.annotation.Rule;
 import org.jeasy.rules.core.BasicRule;
 import org.jeasy.rules.core.DefaultRulesEngine;
 import org.jeasy.rules.core.RuleBuilder;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RulesTest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RulesTest.class);
 
     @Test
     public void testRule() {
@@ -64,6 +70,52 @@ public class RulesTest {
     }
 
 
+    @Test
+    public void testRuleAnnotation() {
+        Rules rules = new Rules();
+        rules.register(new HelloRule());
+
+        Facts facts = new Facts();
+        Fact<String> nameFact = new Fact<>("name", "Ken");
+        Fact<String> chineseNameFact = new Fact<>("chineseName", "肯");
+        facts.add(nameFact);
+        facts.add(chineseNameFact);
+
+        DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
+        rulesEngine.addRuleListener(new RuleListener() {
+            @Override
+            public boolean beforeEvaluate(org.jeasy.rules.api.Rule rule, Facts facts) {
+                return true;
+            }
+
+            @Override
+            public void afterEvaluate(org.jeasy.rules.api.Rule rule, Facts facts, boolean evaluationResult) {
+                LOGGER.info("afterEvaluate, rule: {}, facts: {}", rule, facts);
+            }
+
+            @Override
+            public void onEvaluationError(org.jeasy.rules.api.Rule rule, Facts facts, Exception exception) {
+                LOGGER.info("onEvaluationError, rule: {}, facts: {}", rule, facts, exception);
+            }
+
+            @Override
+            public void beforeExecute(org.jeasy.rules.api.Rule rule, Facts facts) {
+                LOGGER.info("beforeExecute, rule: {}, facts: {}", rule, facts);
+            }
+
+            @Override
+            public void onSuccess(org.jeasy.rules.api.Rule rule, Facts facts) {
+                LOGGER.info("onSuccess, rule: {}, facts: {}", rule, facts);
+            }
+
+            @Override
+            public void onFailure(org.jeasy.rules.api.Rule rule, Facts facts, Exception exception) {
+                LOGGER.info("onFailure, rule: {}, facts: {}", rule, facts, exception);
+            }
+        });
+        rulesEngine.fire(rules, facts);
+    }
+
     static class WeatherRule extends BasicRule {
 
         public WeatherRule(String name, String description, int priority) {
@@ -81,5 +133,24 @@ public class RulesTest {
         }
     }
 
+    @Rule(name = "hello rule", description = "always say hello", priority = 1)
+    public static class HelloRule {
+
+        @org.jeasy.rules.annotation.Condition
+        public boolean alwaysTrue() {
+            return true;
+        }
+
+        @org.jeasy.rules.annotation.Action(order = 0)
+        public void sayHello(@org.jeasy.rules.annotation.Fact("name") String name) {
+            System.out.println("hello " + name);
+        }
+
+        @Action(order = 1)
+        public void sayHelloInChinese(Facts facts) {
+            System.out.println("你好，" + facts.get("chineseName"));
+        }
+
+    }
 
 }

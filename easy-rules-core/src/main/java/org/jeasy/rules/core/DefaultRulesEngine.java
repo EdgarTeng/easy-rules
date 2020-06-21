@@ -130,6 +130,14 @@ public class DefaultRulesEngine implements RulesEngine {
         }
     }
 
+    public void addRuleListener(RuleListener ruleListener) {
+        this.ruleListeners.add(ruleListener);
+    }
+
+    public void addRulesEngineListener(RulesEngineListener rulesEngineListener) {
+        this.rulesEngineListeners.add(rulesEngineListener);
+    }
+
 
     @Override
     public Map<Rule, Boolean> check(Rules rules, Facts facts) {
